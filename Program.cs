@@ -9,23 +9,21 @@ public class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(o =>
+        {
+            // 讓 swagger 包含 C# 的 XML documentation
+            string xmlPath = Path.Combine(AppContext.BaseDirectory, "coords-to-taiwanese-city-country.xml");
+            o.IncludeXmlComments(xmlPath, true);
+        });
 
         builder.Services.AddScoped<ILocatingService, LocatingService>();
         
         WebApplication app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        app.UseSwagger();
+        app.UseSwaggerUI();
 
         app.UseHttpsRedirection();
 
