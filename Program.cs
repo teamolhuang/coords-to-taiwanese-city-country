@@ -11,9 +11,15 @@ using Microsoft.OpenApi.Models;
 
 namespace coords_to_taiwanese_city_country;
 
+/// <summary>
+/// main class
+/// </summary>
 public class Program
 {
-    public static void Main(string[] args)
+    /// <summary>
+    /// main
+    /// </summary>
+    public static async Task Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -43,11 +49,18 @@ public class Program
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddSingleton<ICooldownService, CooldownService>();
 
+        // 在子目錄 db 底下建立 db file
+        Directory.CreateDirectory("db");
         builder.Services.AddDbContext<DatabaseContext>(options =>
         {
-            options.UseSqlite("Data Source=database.db");
+            options.UseSqlite("Data Source=db\\database.db");
         });
         
+        // 我們允許透過 docker-compose 的系統參數變動 appSettings
+        builder.Configuration
+            .AddEnvironmentVariables();
+        
+        // JWT handling
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(jwtOptions =>
             {
@@ -75,7 +88,12 @@ public class Program
             });
         
         WebApplication app = builder.Build();
-
+        
+        // 先確保已建立並更新 db
+        await using AsyncServiceScope scope = app.Services.CreateAsyncScope();
+        await using DatabaseContext db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+        await db.Database.MigrateAsync();
+        
         app.UseSwagger();
         app.UseSwaggerUI();
 
@@ -87,6 +105,6 @@ public class Program
 
         app.MapControllers();
 
-        app.Run();
+        await app.RunAsync();
     }
 }

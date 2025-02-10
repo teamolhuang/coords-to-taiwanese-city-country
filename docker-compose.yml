@@ -1,6 +1,19 @@
 ﻿services:
   coords-to-taiwanese-city-country:
-    image: coords-to-taiwanese-city-country
+    image: teamolhuang/coords-to-tw-city:latest
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - /db:/app/db
+    ports:
+      # 在 container 中 (api) 使用預設的 8080
+      # 在 host 預設使用 32001 
+      - "32001:8080"
+    environment:
+      # JWT 簽署用私鑰。建置者應在使用本 yml 時自行修改此私鑰。
+      Jwt__SigningKey: "change-this-example-key-or-i-will-be-angry"
+      # API 執行限制的寬容期間。預設 1 代表每次執行會保持在記錄中 1 秒
+      Throttling__WindowDurationSeconds: 1
+      # 在寬容期間最多可以執行幾次。預設 100 代表 100 次
+      Throttling__MaxExecutionCount: 100
