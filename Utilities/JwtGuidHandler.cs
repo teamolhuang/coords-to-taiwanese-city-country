@@ -31,6 +31,7 @@ public static class JwtGuidHandler
         
         bool isExist = await dbContext.UserAccounts
             .Where(ua => ua.Id == nameIdentifierGuid)
+            .Where(ua => ua.BannedUntil == null || ua.BannedUntil < DateTime.Now)
             .AnyAsync();
 
         if (!isExist)

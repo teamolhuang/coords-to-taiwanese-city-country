@@ -48,8 +48,9 @@ public class AuthService(DatabaseContext databaseContext,
     {
         // 1. 找出相同的帳號
         UserAccount data = await databaseContext.UserAccounts
-            .FirstOrDefaultAsync(ua => ua.Account == request.Account)
-            ?? throw new NullReferenceException("帳號或密碼輸入錯誤");
+                               .Where(ua => ua.BannedUntil == null || ua.BannedUntil < DateTime.Now)
+                               .FirstOrDefaultAsync(ua => ua.Account == request.Account) 
+                           ?? throw new NullReferenceException("帳號或密碼輸入錯誤");
         
         // 2. 驗證密碼
         bool isVerified = BCrypt.Net.BCrypt.Verify(request.Password, data.HashedPassword);
@@ -85,14 +86,39 @@ public class AuthService(DatabaseContext databaseContext,
 
         Guid userIdGuid = new(userId);
         
-        UserAccount? data = await databaseContext.UserAccounts
-            .FirstOrDefaultAsync(ua => ua.Id == userIdGuid);
+        UserAccount? data = await FindUserAccountByIdAsync(userIdGuid);
 
         if (data is null)
             return;
 
         // 2. 執行刪除並回傳
         databaseContext.Remove(data);
+        await databaseContext.SaveChangesAsync();
+    }
+
+    private async Task<UserAccount?> FindUserAccountByIdAsync(Guid id)
+    {
+        UserAccount? data = await databaseContext.UserAccounts
+            .FirstOrDefaultAsync(ua => ua.Id == id);
+        return data;
+    }
+
+    /// <inheritdoc />
+    public async Task BanAsync(string userIdentifier, TimeSpan duration)
+    {
+        UserAccount? userData = await FindUserAccountByIdAsync(new Guid(userIdentifier));
+        
+        // 如果帳號已不存在，忽略並返回
+        if (userData is null)
+            return;
+
+        // 如果還在禁閉期間，就加時到原本的禁用期限上
+        DateTime start = DateTime.Now <= userData.BannedUntil
+            ? userData.BannedUntil.Value
+            : DateTime.Now;
+
+        userData.BannedUntil = start.Add(duration);
+        
         await databaseContext.SaveChangesAsync();
     }
 }

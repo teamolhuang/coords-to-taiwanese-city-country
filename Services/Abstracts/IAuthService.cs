@@ -22,4 +22,9 @@ public interface IAuthService
     /// 刪除帳號
     /// </summary>
     Task DeleteAsync(ClaimsPrincipal claimsPrincipal);
+
+    /// <summary>
+    /// 暫時禁用使用者帳號
+    /// </summary>
+    Task BanAsync(string userIdentifier, TimeSpan duration);
 }

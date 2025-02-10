@@ -35,5 +35,5 @@ public class UserAccount
     /// <summary>
     /// 禁用冷卻期限
     /// </summary>
-    public DateTimeOffset? BannedUntil { get; set; }
+    public DateTime? BannedUntil { get; set; }
 }

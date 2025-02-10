@@ -18,7 +18,7 @@ namespace coords_to_taiwanese_city_country.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Account = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
                     HashedPassword = table.Column<string>(type: "TEXT", nullable: false),
-                    BannedUntil = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    BannedUntil = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

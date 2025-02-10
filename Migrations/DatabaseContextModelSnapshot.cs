@@ -37,7 +37,7 @@ namespace coords_to_taiwanese_city_country.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserAccount");
+                    b.ToTable("UserAccount", (string)null);
                 });
 #pragma warning restore 612, 618
         }

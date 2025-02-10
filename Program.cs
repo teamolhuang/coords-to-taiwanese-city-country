@@ -41,6 +41,7 @@ public class Program
 
         builder.Services.AddScoped<ILocatingService, LocatingService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddSingleton<ICooldownService, CooldownService>();
 
         builder.Services.AddDbContext<DatabaseContext>(options =>
         {

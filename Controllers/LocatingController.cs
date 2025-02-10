@@ -1,4 +1,5 @@
 ﻿using coords_to_taiwanese_city_country.Models;
+using coords_to_taiwanese_city_country.Services;
 using coords_to_taiwanese_city_country.Services.Abstracts;
 using coords_to_taiwanese_city_country.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +14,9 @@ namespace coords_to_taiwanese_city_country.Controllers;
 [Authorize]
 [Route("api/locating")]
 public class LocatingController(
-        ILocatingService locatingService
+        ILocatingService locatingService,
+        ICooldownService cooldownService,
+        IAuthService authService
     ) : ControllerBase
 {
     /// <summary>
@@ -23,8 +26,27 @@ public class LocatingController(
     [ProducesResponseType<BaseResponse<GetLocationResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetTaiwanCityCountry([FromQuery] GetLocationRequest request)
     {
-        BaseResponse<GetLocationResponse> result = await locatingService.GetLocationInTaiwanMainLandAsync(request)
-            .ToBaseResponse();
+        Func<Task<GetLocationResponse>> execution = async () =>
+        {
+            string userIdentifier = JwtGuidHandler.GetGuidFromClaims(HttpContext.User.Claims)!;
+
+            try
+            {
+                await cooldownService.CheckCooldownAsync(TimeSpan.FromSeconds(1),
+                    100,
+                    userIdentifier);
+            }
+            catch (TooManyRequestsException)
+            {
+                // 如果冷卻檢查失敗，而且錯誤確實是超出限制了，跑去 ban 一小時
+                await authService.BanAsync(userIdentifier, TimeSpan.FromHours(1));
+                throw;
+            }
+
+            return await locatingService.GetLocationInTaiwanMainLandAsync(request);
+        };
+
+        BaseResponse<GetLocationResponse> result = await execution.Invoke().ToBaseResponse();
 
         return Ok(result);
     }
