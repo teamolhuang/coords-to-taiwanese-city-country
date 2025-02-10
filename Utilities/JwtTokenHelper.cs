@@ -9,7 +9,7 @@ namespace coords_to_taiwanese_city_country.Utilities;
 /// <summary>
 /// JWT Token 發行相關的工具
 /// </summary>
-public class JwtHelper
+public static class JwtTokenHelper
 {
     /// <summary>
     /// 發行 JWT

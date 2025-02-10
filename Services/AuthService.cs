@@ -62,7 +62,7 @@ public class AuthService(DatabaseContext databaseContext,
         int expireMinutes = configuration.GetSection("Jwt").GetValue<int?>("ExpireMinutes") ?? 60;
         DateTime expiration = DateTime.Now.AddMinutes(expireMinutes);
 
-        string jwtToken = JwtHelper.GenerateToken(data.Id, expiration, privateKey);
+        string jwtToken = JwtTokenHelper.GenerateToken(data.Id, expiration, privateKey);
         
         LoginResponse result = new()
         {
@@ -78,7 +78,7 @@ public class AuthService(DatabaseContext databaseContext,
     {
         // 1. 找出帳號，如果已不存在，當成已刪除成功並回傳
         // 本系統固定會把 GUID 放在 claims 裡面
-        string? userId = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        string? userId = JwtGuidHandler.GetGuidFromClaims(claimsPrincipal.Claims);
 
         if (userId is null)
             return;

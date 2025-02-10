@@ -20,7 +20,7 @@ public static class JwtGuidHandler
         if (principalClaims?.Any() != true)
             return false;
         
-        string? nameIdentifier = principalClaims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        string? nameIdentifier = GetGuidFromClaims(principalClaims);
 
         if (string.IsNullOrWhiteSpace(nameIdentifier))
             return false;
@@ -37,5 +37,13 @@ public static class JwtGuidHandler
             return false;
 
         return true;
+    }
+
+    /// <summary>
+    /// 從 claims 中取得當前使用者的 GUID
+    /// </summary>
+    public static string? GetGuidFromClaims(IEnumerable<Claim> principalClaims)
+    {
+        return principalClaims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
     }
 }
