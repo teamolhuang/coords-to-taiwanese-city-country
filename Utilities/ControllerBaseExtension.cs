@@ -22,4 +22,20 @@ public static class ControllerBaseExtension
             return new BaseResponse<T>(e);
         }
     }
+    
+    /// <summary>
+    /// 向後呼叫執行商業邏輯，並且回傳通用回傳格式。
+    /// </summary>
+    public static async Task<BaseResponse> ToBaseResponse(this Task task)
+    {
+        try
+        {
+            await task;
+            return new BaseResponse();
+        }
+        catch (Exception e)
+        {
+            return new BaseResponse(e.Message);
+        }
+    }
 }
