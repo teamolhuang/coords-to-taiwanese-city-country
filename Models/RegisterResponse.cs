@@ -8,5 +8,6 @@ public class RegisterResponse
     /// <summary>
     /// 註冊成功的帳號
     /// </summary>
+    /// <example>userExample</example>
     public string Account { get; set; } = null!;
 }

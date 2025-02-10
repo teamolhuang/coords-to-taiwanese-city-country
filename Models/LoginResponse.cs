@@ -5,11 +5,20 @@
 /// </summary>
 public class LoginResponse
 {
+    private string _accessToken = null!;
+
     /// <summary>
     /// JWT 權杖
     /// </summary>
-    public string AccessToken { get; set; } = null!;
-    
+    public string AccessToken
+    {
+        get => _accessToken;
+        set =>
+            _accessToken = value.StartsWith("Bearer ", StringComparison.InvariantCultureIgnoreCase)
+                ? value
+                : $"Bearer {value}";
+    }
+
     /// <summary>
     /// JWT 有效期限
     /// </summary>
