@@ -1,0 +1,67 @@
+﻿## Coords To Taiwanese City Country
+* This is a C# ASP.NET Core Web API project, mainly in Traditional Chinese.
+* Its purpose: Convert lat/long coordinates into nearest Taiwanese city and country.
+
+## 座標轉台灣本島縣市鄉鎮市區
+* 這是一個 C# ASP.NET Core Web API，主要功能是傳入經緯度，把座標資訊轉換成台灣本島的縣市、鄉鎮市區用。
+* 它基於政府開放資訊平台的 TWD97，不依賴於其他外部 API，可用於內部自行建置服務用等情況。
+
+## 如何建置
+### Docker
+```
+docker run --name "coords-to-tw-city" -v "/db:/app/db" -d -p 32001:8080 -e Jwt__SigningKey='set-your-own-private-key-or-i-will-be-angry' "teamolhuang/coords-to-tw-city:latest"
+```
+
+> 預設使用 Host 的 32001，可自行調整。
+
+> 建置者應設定 Jwt__SigningKey
+
+### Docker Compose
+```yml
+    services:
+      coords-to-taiwanese-city-country:
+        image: teamolhuang/coords-to-tw-city:latest
+        build:
+          context: .
+          dockerfile: Dockerfile
+        volumes:
+          - /db:/app/db
+        ports:
+          # 在 container 中 (api) 使用預設的 8080
+          # 在 host 預設使用 32001 
+          - "32001:8080"
+        environment:
+          # JWT 簽署用私鑰。建置者應在使用本 yml 時自行修改此私鑰。
+          Jwt__SigningKey: "change-this-example-key-or-i-will-be-angry"
+          # API 執行限制的寬容期間。預設 1 代表每次執行會保持在記錄中 1 秒
+          Throttling__WindowDurationSeconds: 1
+          # 在寬容期間最多可以執行幾次。預設 100 代表 100 次
+          Throttling__MaxExecutionCount: 100
+```
+
+## 如何使用
+* 建立以後，於本機連入 `https://localhost:32001/swagger/index.html` 即可存取 swagger。
+* api 會在 `https://localhost:32001/api/xxx`。
+
+1. 先使用 `/api/auth/register` 註冊帳號。
+2. 使用 `/api/auth/login` 取得 access token。
+  * Response 中的 `result.expiresAt` 會提示這組權杖有效到什麼時候。
+3. 使用 `/api/locating/coords-to-taiwanese-city-country` 即可開始轉換經緯度。
+
+## json 回傳範例與說明
+```json
+{
+  // 通用欄位 - 如果 API 有實際回傳物件，會包裝在這個欄位中。
+  "result": {
+    // 各 API 的自訂回傳物件規格，可參照 Swagger 中的 schema 說明。
+    "city": "基隆市",
+    "country": "中山區"
+  },
+  
+  // 通用欄位 - 表示此次商業邏輯是否成功。
+  "isSuccessful": true,
+  
+  // 通用欄位 - 若執行失敗，此欄位會包含錯誤訊息，以供排查原因。
+  "message": null
+}
+```
