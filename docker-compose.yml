@@ -1,0 +1,6 @@
+﻿services:
+  coords-to-taiwanese-city-country:
+    image: coords-to-taiwanese-city-country
+    build:
+      context: .
+      dockerfile: Dockerfile
