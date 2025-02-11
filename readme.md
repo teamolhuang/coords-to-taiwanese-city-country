@@ -36,7 +36,7 @@ services:
 ```
 
 ```
-docker-compose up
+docker-compose up -d
 ```
 
 ## 如何使用
