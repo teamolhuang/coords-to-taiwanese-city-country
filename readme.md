@@ -25,7 +25,7 @@ docker run --name "coords-to-tw-city" -v "./coords-to-tw-city-vol:/app/db" -d -p
 services:
   coords-to-tw-city:
     container_name: coords-to-tw-city
-    image: teamolhuang/coords-to-tw-city:v1.0.2
+    image: teamolhuang/coords-to-tw-city:latest
     build:
       context: .
       dockerfile: Dockerfile
