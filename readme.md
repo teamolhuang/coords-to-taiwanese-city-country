@@ -23,7 +23,8 @@ docker run --name "coords-to-tw-city" -v "coords-to-tw-city-vol:/app/db" -d -p 3
 ### Docker Compose
 ```yml
     services:
-      coords-to-taiwanese-city-country:
+      coords-to-tw-city:
+        container_name: coords-to-tw-city
         image: teamolhuang/coords-to-tw-city:latest
         build:
           context: .
