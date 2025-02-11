@@ -14,4 +14,9 @@ public interface ILocatingService
     /// <see cref="GetLocationResponse"/>
     /// </returns>
     public Task<GetLocationResponse> GetLocationInTaiwanMainLandAsync(GetLocationRequest request);
+
+    /// <summary>
+    /// 取得所有支援的縣市與鄉鎮市區列表。
+    /// </summary>
+    Task<CityCountryListResponse> GetListAsync();
 }

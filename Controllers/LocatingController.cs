@@ -52,4 +52,17 @@ public class LocatingController(
 
         return Ok(result);
     }
+
+    /// <summary>
+    /// 查詢目前本系統中的所有縣市與鄉鎮市區。
+    /// </summary>
+    [HttpGet("city-country-list")]
+    [ProducesResponseType<CityCountryListResponse>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCityCountryList()
+    {
+        BaseResponse<CityCountryListResponse> result = await locatingService.GetListAsync()
+            .ToBaseResponse();
+
+        return Ok(result);
+    }
 }

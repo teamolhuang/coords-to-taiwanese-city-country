@@ -1,15 +1,14 @@
 ﻿using coords_to_taiwanese_city_country.Models;
 using coords_to_taiwanese_city_country.Services;
-using coords_to_taiwanese_city_country.Utilities;
 using coords_to_taiwanese_city_country.Utilities.Abstracts;
 using Moq;
 using Moq.AutoMock;
 
-namespace tests.Services;
+namespace tests.Services.LocatingServiceTests;
 
 [TestFixture]
-[Description("針對 LocatingService 的各種測試。")]
-public class LocatingServiceTests
+[Description("針對 LocatingService 中轉換經緯度方法的各種測試。")]
+public class LocatingServiceGetLocationTests
 {
     [Test]
     [TestCase(121.6, 25.1, "基隆市", "中山區")]

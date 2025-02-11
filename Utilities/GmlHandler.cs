@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using coords_to_taiwanese_city_country.Models;
 using coords_to_taiwanese_city_country.Utilities.Abstracts;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Index.Strtree;
@@ -19,19 +20,32 @@ public class GmlHandler : IGmlHandler
         // 台灣的縣市名稱固定為三個字元
         return (new string(closest.Take(3).ToArray()), new string(closest.Skip(3).ToArray()));
     }
-    
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<string>> GetListAsync()
+    {
+        // 如果這次生命週期還沒有拿到過全縣市列表，代表 R-Tree 還沒初始化過，做一次初始化。
+        if (_allNames is null)
+            await InitializeIndexAsync();
+
+        return _allNames;
+    }
+
     #region privates
     
     private static STRtree<Geometry>? _spatialIndex;
 
     private const string NameNode = "名稱";
     private const string GmlMultiPolygonNode = "gml:MultiPolygon";
-    
+
+    private static ICollection<string>? _allNames = null;
     /// <summary>
     /// 初始化
     /// </summary>
     private static async Task InitializeIndexAsync()
     {
+        _allNames = [];
+        
         // GML 格式基於 XML，而政府開放資料平台提供的資料是一個包含許多 GML 元素的 XML
         // 所以我們用讀取 XML -> 撈出 GML 的方式進行 
         XmlReader xmlReader = XmlReader.Create("StaticFiles/twd97.gml", new XmlReaderSettings
@@ -69,6 +83,9 @@ public class GmlHandler : IGmlHandler
                 
                 SetLocationName(geometry, nowName);
                 _spatialIndex.Insert(geometry.EnvelopeInternal, geometry);
+                
+                // 為了滿足取得列表的需求，我們也同時把完整名稱存到快取
+                _allNames.Add(nowName);
             }
         }
         
