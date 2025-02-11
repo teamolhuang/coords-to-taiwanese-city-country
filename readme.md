@@ -13,7 +13,7 @@
 ## 如何建置
 ### Docker
 ```
-docker run --name "coords-to-tw-city" -v "/db:/app/db" -d -p 32001:8080 -e Jwt__SigningKey='set-your-own-private-key-or-i-will-be-angry' "teamolhuang/coords-to-tw-city:latest"
+docker run --name "coords-to-tw-city" -v "coords-to-tw-city-vol:/app/db" -d -p 32001:8080 -e Jwt__SigningKey='set-your-own-private-key-or-i-will-be-angry' "teamolhuang/coords-to-tw-city:latest"
 ```
 
 > 預設使用 Host 的 32001，可自行調整。
@@ -29,7 +29,7 @@ docker run --name "coords-to-tw-city" -v "/db:/app/db" -d -p 32001:8080 -e Jwt__
           context: .
           dockerfile: Dockerfile
         volumes:
-          - /db:/app/db
+          - coords-to-tw-city-vol:/app/db
         ports:
           # 在 container 中 (api) 使用預設的 8080
           # 在 host 預設使用 32001 
