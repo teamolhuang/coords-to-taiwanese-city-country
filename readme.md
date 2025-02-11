@@ -47,10 +47,21 @@ docker-compose up
 * 建立以後，於本機連入 `https://localhost:32001/swagger/index.html` 即可存取 swagger。
 * api 會在 `https://localhost:32001/api/xxx` 。
 
-1. 先使用 `/api/auth/register` 註冊帳號。
-2. 使用 `/api/auth/login` 取得 access token。
-    * Response 中的 `result.expiresAt` 會提示這組權杖有效到什麼時候。
-3. 使用 `/api/locating/coords-to-taiwanese-city-country` 即可開始轉換經緯度。
+#### 1. 先使用 `/api/auth/register` 註冊帳號。
+
+![image](https://github.com/user-attachments/assets/d625da0f-e504-4b82-a286-b2495cf0f659)
+
+#### 2. 使用 `/api/auth/login` 取得 access token。
+
+![image](https://github.com/user-attachments/assets/07f3e416-d73d-4ae8-85e1-dc8a133906ca)
+
+![image](https://github.com/user-attachments/assets/a815e1b4-4f35-47e7-90de-77cded1adb67)
+
+>  Response 中的 `result.expiresAt` 會提示這組權杖有效到什麼時候。
+
+#### 3. 使用 `/api/locating/coords-to-taiwanese-city-country` 即可開始轉換經緯度。
+
+![image](https://github.com/user-attachments/assets/c7856cf4-2b5d-418a-9bec-1e0efc4e5604)
 
 ## json 回傳範例與說明
 ```json
