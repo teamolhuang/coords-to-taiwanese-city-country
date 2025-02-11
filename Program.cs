@@ -56,9 +56,11 @@ public class Program
 
         // 在子目錄 db 底下建立 db file
         Directory.CreateDirectory("db");
+        string dbFilePath = Path.Combine("db", "database.db");
+        
         builder.Services.AddDbContext<DatabaseContext>(options =>
         {
-            options.UseSqlite("Data Source=db\\database.db");
+            options.UseSqlite($"Data Source={dbFilePath}");
         });
         
         // 我們允許透過 docker-compose 的系統參數變動 appSettings
