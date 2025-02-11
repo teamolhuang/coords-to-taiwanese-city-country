@@ -1,12 +1,12 @@
 ﻿services:
   coords-to-tw-city:
     container_name: coords-to-tw-city
-    image: teamolhuang/coords-to-tw-city:latest
+    image: teamolhuang/coords-to-tw-city:v1.0.2
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - coords-to-tw-city-vol:/app/db
+      - ./coords-to-tw-city-vol:/app/db
     ports:
       # 在 container 中 (api) 使用預設的 8080
       # 在 host 預設使用 32001 
@@ -18,6 +18,3 @@
       Throttling__WindowDurationSeconds: 1
       # 在寬容期間最多可以執行幾次。預設 100 代表 100 次
       Throttling__MaxExecutionCount: 100
-volumes:
-  coords-to-tw-city-vol:
-    external: true

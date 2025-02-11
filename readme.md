@@ -13,7 +13,7 @@
 ## 如何建置
 ### Docker
 ```
-docker run --name "coords-to-tw-city" -v "coords-to-tw-city-vol:/app/db" -d -p 32001:8080 -e Jwt__SigningKey='set-your-own-private-key-or-i-will-be-angry' "teamolhuang/coords-to-tw-city:latest"
+docker run --name "coords-to-tw-city" -v "./coords-to-tw-city-vol:/app/db" -d -p 32001:8080 -e Jwt__SigningKey='set-your-own-private-key-or-i-will-be-angry' "teamolhuang/coords-to-tw-city:latest"
 ```
 
 > 預設使用 Host 的 32001，可自行調整。
@@ -22,26 +22,26 @@ docker run --name "coords-to-tw-city" -v "coords-to-tw-city-vol:/app/db" -d -p 3
 
 ### Docker Compose
 ```yml
-    services:
-      coords-to-tw-city:
-        container_name: coords-to-tw-city
-        image: teamolhuang/coords-to-tw-city:latest
-        build:
-          context: .
-          dockerfile: Dockerfile
-        volumes:
-          - coords-to-tw-city-vol:/app/db
-        ports:
-          # 在 container 中 (api) 使用預設的 8080
-          # 在 host 預設使用 32001 
-          - "32001:8080"
-        environment:
-          # JWT 簽署用私鑰。建置者應在使用本 yml 時自行修改此私鑰。
-          Jwt__SigningKey: "change-this-example-key-or-i-will-be-angry"
-          # API 執行限制的寬容期間。預設 1 代表每次執行會保持在記錄中 1 秒
-          Throttling__WindowDurationSeconds: 1
-          # 在寬容期間最多可以執行幾次。預設 100 代表 100 次
-          Throttling__MaxExecutionCount: 100
+services:
+  coords-to-tw-city:
+    container_name: coords-to-tw-city
+    image: teamolhuang/coords-to-tw-city:v1.0.2
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./coords-to-tw-city-vol:/app/db
+    ports:
+      # 在 container 中 (api) 使用預設的 8080
+      # 在 host 預設使用 32001 
+      - "32001:8080"
+    environment:
+      # JWT 簽署用私鑰。建置者應在使用本 yml 時自行修改此私鑰。
+      Jwt__SigningKey: "change-this-example-key-or-i-will-be-angry"
+      # API 執行限制的寬容期間。預設 1 代表每次執行會保持在記錄中 1 秒
+      Throttling__WindowDurationSeconds: 1
+      # 在寬容期間最多可以執行幾次。預設 100 代表 100 次
+      Throttling__MaxExecutionCount: 100
 ```
 
 ```
