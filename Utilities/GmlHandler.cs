@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using coords_to_taiwanese_city_country.Utilities.Abstracts;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Index.Strtree;
 using NetTopologySuite.IO.GML2;
@@ -8,17 +9,10 @@ namespace coords_to_taiwanese_city_country.Utilities;
 /// <summary>
 /// 針對 鄉鎮市區界線(TWD97經緯度) 的 gml 進行處理的包裝。
 /// </summary>
-public static class GmlHandler
+public class GmlHandler : IGmlHandler
 {
-    /// <summary>
-    /// 傳入經度、緯度，回傳縣市與鄉鎮市區。
-    /// </summary>
-    /// <param name="longitude">經度</param>
-    /// <param name="latitude">緯度</param>
-    /// <returns>
-    /// 縣市與鄉鎮市區的中文字串的 tuple
-    /// </returns>
-    public static async Task<(string city, string country)?> GetAddressAsync(decimal longitude, decimal latitude)
+    /// <inheritdoc />
+    public async Task<(string city, string country)?> GetAddressAsync(decimal longitude, decimal latitude)
     {
         string closest = await QueryGeometryAsync(longitude, latitude);
 

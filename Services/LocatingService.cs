@@ -1,11 +1,13 @@
 ﻿using coords_to_taiwanese_city_country.Models;
 using coords_to_taiwanese_city_country.Services.Abstracts;
 using coords_to_taiwanese_city_country.Utilities;
+using coords_to_taiwanese_city_country.Utilities.Abstracts;
 
 namespace coords_to_taiwanese_city_country.Services;
 
 /// <inheritdoc />
-public class LocatingService(ILogger<ILocatingService> logger) : ILocatingService
+public class LocatingService(ILogger<ILocatingService> logger,
+    IGmlHandler gmlHandler) : ILocatingService
 {
     /// <inheritdoc />
     public async Task<GetLocationResponse> GetLocationInTaiwanMainLandAsync(GetLocationRequest request)
@@ -14,7 +16,7 @@ public class LocatingService(ILogger<ILocatingService> logger) : ILocatingServic
         {
             // 1. 呼叫 GmlHandler，取得 XX市 XX區 的字串。
             (string city, string country)? result =
-                await GmlHandler.GetAddressAsync(request.Longitude!.Value, request.Latitude!.Value);
+                await gmlHandler.GetAddressAsync(request.Longitude!.Value, request.Latitude!.Value);
 
             // 2. 如果沒有結果，拋出。
             if (result is null 

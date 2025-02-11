@@ -3,6 +3,7 @@ using coords_to_taiwanese_city_country.Entities;
 using coords_to_taiwanese_city_country.Services;
 using coords_to_taiwanese_city_country.Services.Abstracts;
 using coords_to_taiwanese_city_country.Utilities;
+using coords_to_taiwanese_city_country.Utilities.Abstracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -48,6 +49,8 @@ public class Program
         builder.Services.AddScoped<ILocatingService, LocatingService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddSingleton<ICooldownService, CooldownService>();
+
+        builder.Services.AddSingleton<IGmlHandler, GmlHandler>();
 
         // 在子目錄 db 底下建立 db file
         Directory.CreateDirectory("db");
