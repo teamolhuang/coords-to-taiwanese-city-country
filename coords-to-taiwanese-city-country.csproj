@@ -43,16 +43,20 @@
       <None Remove="tests\**" />
       <Content Remove="db\**" />
       <None Remove="db\**" />
+      <Content Remove="coords-to-tw-city-vol\**" />
+      <None Remove="coords-to-tw-city-vol\**" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Remove="tests\**" />
       <Compile Remove="db\**" />
+      <Compile Remove="coords-to-tw-city-vol\**" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Remove="tests\**" />
       <EmbeddedResource Remove="db\**" />
+      <EmbeddedResource Remove="coords-to-tw-city-vol\**" />
     </ItemGroup>
 
     <ItemGroup>
