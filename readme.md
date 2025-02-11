@@ -6,10 +6,10 @@
 * 這是一個 C# ASP.NET Core Web API，主要功能是傳入經緯度，把座標資訊轉換成台灣本島的縣市、鄉鎮市區用。
 * 它基於[政府資料開放平臺的 TWD97](https://data.nat.gov.tw/dataset/7441)，不依賴於其他外部 API，可用於內部自行建置服務用等情況。
 
-## 如何使用
-* 建立以後，於本機連入 `https://localhost:32001/swagger/index.html` 即可存取 swagger。
-* api 會在 `https://localhost:32001/api/xxx` 。
+## DEMO 網頁
+* 您可以[在這裡試用](https://coords-to-taiwanese-city-country.teamol-developing.net/swagger/index.html)。
 
+## 如何使用
 #### 1. 先使用 `/api/auth/register` 註冊帳號。
 
 ![image](https://github.com/user-attachments/assets/d625da0f-e504-4b82-a286-b2495cf0f659)
@@ -58,6 +58,9 @@ services:
 ```
 docker-compose up -d
 ```
+
+* 建置以後，於本機連入 `https://localhost:32001/swagger/index.html` 即可存取 swagger。
+* api 會在 `https://localhost:32001/api/xxx` 。
 
 ## json 回傳範例與說明
 ```jsonc
