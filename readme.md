@@ -4,7 +4,27 @@
 
 ## 座標轉台灣本島縣市鄉鎮市區
 * 這是一個 C# ASP.NET Core Web API，主要功能是傳入經緯度，把座標資訊轉換成台灣本島的縣市、鄉鎮市區用。
-* 它基於[政府開放資訊平台的 TWD97](https://data.nat.gov.tw/dataset/7441)，不依賴於其他外部 API，可用於內部自行建置服務用等情況。
+* 它基於[政府資料開放平臺的 TWD97](https://data.nat.gov.tw/dataset/7441)，不依賴於其他外部 API，可用於內部自行建置服務用等情況。
+
+## 如何使用
+* 建立以後，於本機連入 `https://localhost:32001/swagger/index.html` 即可存取 swagger。
+* api 會在 `https://localhost:32001/api/xxx` 。
+
+#### 1. 先使用 `/api/auth/register` 註冊帳號。
+
+![image](https://github.com/user-attachments/assets/d625da0f-e504-4b82-a286-b2495cf0f659)
+
+#### 2. 使用 `/api/auth/login` 取得 access token。
+
+![image](https://github.com/user-attachments/assets/07f3e416-d73d-4ae8-85e1-dc8a133906ca)
+
+![image](https://github.com/user-attachments/assets/a815e1b4-4f35-47e7-90de-77cded1adb67)
+
+>  Response 中的 `result.expiresAt` 會提示這組權杖有效到什麼時候。
+
+#### 3. 使用 `/api/locating/coords-to-taiwanese-city-country` 即可開始轉換經緯度。
+
+![image](https://github.com/user-attachments/assets/c7856cf4-2b5d-418a-9bec-1e0efc4e5604)
 
 ## 專案架構說明
 
@@ -39,28 +59,8 @@ services:
 docker-compose up -d
 ```
 
-## 如何使用
-* 建立以後，於本機連入 `https://localhost:32001/swagger/index.html` 即可存取 swagger。
-* api 會在 `https://localhost:32001/api/xxx` 。
-
-#### 1. 先使用 `/api/auth/register` 註冊帳號。
-
-![image](https://github.com/user-attachments/assets/d625da0f-e504-4b82-a286-b2495cf0f659)
-
-#### 2. 使用 `/api/auth/login` 取得 access token。
-
-![image](https://github.com/user-attachments/assets/07f3e416-d73d-4ae8-85e1-dc8a133906ca)
-
-![image](https://github.com/user-attachments/assets/a815e1b4-4f35-47e7-90de-77cded1adb67)
-
->  Response 中的 `result.expiresAt` 會提示這組權杖有效到什麼時候。
-
-#### 3. 使用 `/api/locating/coords-to-taiwanese-city-country` 即可開始轉換經緯度。
-
-![image](https://github.com/user-attachments/assets/c7856cf4-2b5d-418a-9bec-1e0efc4e5604)
-
 ## json 回傳範例與說明
-```json
+```jsonc
 {
   // 通用欄位 - 如果 API 有實際回傳物件，會包裝在這個欄位中。
   "result": {
