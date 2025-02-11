@@ -41,14 +41,18 @@
       </Content>
       <Content Remove="tests\**" />
       <None Remove="tests\**" />
+      <Content Remove="db\**" />
+      <None Remove="db\**" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Remove="tests\**" />
+      <Compile Remove="db\**" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Remove="tests\**" />
+      <EmbeddedResource Remove="db\**" />
     </ItemGroup>
 
     <ItemGroup>
