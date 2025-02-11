@@ -11,15 +11,6 @@
 ![image](https://github.com/user-attachments/assets/59badf1e-1a9a-42c5-9262-eec67035b0a4)
 
 ## 如何建置
-### Docker
-```
-docker run --name "coords-to-tw-city" -v "./coords-to-tw-city-vol:/app/db" -d -p 32001:8080 -e Jwt__SigningKey='set-your-own-private-key-or-i-will-be-angry' "teamolhuang/coords-to-tw-city:latest"
-```
-
-> 預設使用 Host 的 32001，可自行調整。
-
-> 建置者應設定 Jwt__SigningKey
-
 ### Docker Compose
 ```yml
 services:
