@@ -6,6 +6,10 @@
 * 這是一個 C# ASP.NET Core Web API，主要功能是傳入經緯度，把座標資訊轉換成台灣本島的縣市、鄉鎮市區用。
 * 它基於[政府開放資訊平台的 TWD97](https://data.nat.gov.tw/dataset/7441)，不依賴於其他外部 API，可用於內部自行建置服務用等情況。
 
+## 專案架構說明
+
+![image](https://github.com/user-attachments/assets/59badf1e-1a9a-42c5-9262-eec67035b0a4)
+
 ## 如何建置
 ### Docker
 ```
