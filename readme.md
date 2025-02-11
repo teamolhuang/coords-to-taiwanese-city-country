@@ -9,6 +9,8 @@
 ## DEMO 網頁
 * 您可以[在這裡試用](https://coords-to-taiwanese-city-country.teamol-developing.net/swagger/index.html)。
 
+> Demo 網站為自架伺服器後，透過 Cloudflare Tunnel 技術對外開放，不需獨立設定防火牆，但保持設定上的彈性。
+
 ## 如何使用
 #### 1. 先使用 `/api/auth/register` 註冊帳號。
 
