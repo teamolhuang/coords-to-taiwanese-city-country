@@ -1,19 +1,18 @@
 ﻿using System.Security.Claims;
 using coords_to_taiwanese_city_country.Entities;
+using coords_to_taiwanese_city_country.Utilities.Abstracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
 namespace coords_to_taiwanese_city_country.Utilities;
 
-/// <summary>
-/// 處理 JWT 中代表使用者 ID 的 guid
-/// </summary>
-public static class JwtGuidHandler
+/// <inheritdoc />
+public class JwtGuidHandler : IJwtGuidHandler
 {
     /// <summary>
     /// 驗證 claim 中的 GUID 尚未在本系統被刪除
     /// </summary>
-    public static async Task<bool> ValidateGuidNotDeletedAsync(TokenValidatedContext context)
+    public async Task<bool> ValidateGuidNotDeletedAsync(TokenValidatedContext context)
     {
         Claim[]? principalClaims = context.Principal?.Claims.ToArray();
 
@@ -40,10 +39,8 @@ public static class JwtGuidHandler
         return true;
     }
 
-    /// <summary>
-    /// 從 claims 中取得當前使用者的 GUID
-    /// </summary>
-    public static string? GetGuidFromClaims(IEnumerable<Claim> principalClaims)
+    /// <inheritdoc />
+    public string? GetGuidFromClaims(IEnumerable<Claim> principalClaims)
     {
         return principalClaims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
     }

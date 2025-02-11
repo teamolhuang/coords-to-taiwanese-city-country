@@ -2,6 +2,7 @@
 using coords_to_taiwanese_city_country.Services;
 using coords_to_taiwanese_city_country.Services.Abstracts;
 using coords_to_taiwanese_city_country.Utilities;
+using coords_to_taiwanese_city_country.Utilities.Abstracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,8 @@ namespace coords_to_taiwanese_city_country.Controllers;
 public class LocatingController(
         ILocatingService locatingService,
         ICooldownService cooldownService,
-        IAuthService authService
+        IAuthService authService,
+        IJwtGuidHandler jwtGuidHandler
     ) : ControllerBase
 {
     /// <summary>
@@ -28,7 +30,7 @@ public class LocatingController(
     {
         Func<Task<GetLocationResponse>> execution = async () =>
         {
-            string userIdentifier = JwtGuidHandler.GetGuidFromClaims(HttpContext.User.Claims)!;
+            string userIdentifier = jwtGuidHandler.GetGuidFromClaims(HttpContext.User.Claims)!;
 
             try
             {

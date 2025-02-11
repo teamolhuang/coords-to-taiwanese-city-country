@@ -20,5 +20,5 @@ public class DatabaseContext : DbContext
     /// <summary>
     /// 使用者帳號
     /// </summary>
-    public DbSet<UserAccount> UserAccounts { get; set; }
+    public virtual DbSet<UserAccount> UserAccounts { get; set; }
 }

@@ -50,6 +50,8 @@ public class Program
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddSingleton<ICooldownService, CooldownService>();
 
+        builder.Services.AddSingleton<IJwtTokenHelper, JwtTokenHelper>();
+        builder.Services.AddSingleton<IJwtGuidHandler, JwtGuidHandler>();
         builder.Services.AddSingleton<IGmlHandler, GmlHandler>();
 
         // 在子目錄 db 底下建立 db file
@@ -82,7 +84,11 @@ public class Program
                 {
                     OnTokenValidated = async context =>
                     {
-                        bool isNotDeleted = await JwtGuidHandler.ValidateGuidNotDeletedAsync(context);
+                        bool isNotDeleted = await context
+                            .HttpContext
+                            .RequestServices
+                            .GetRequiredService<IJwtGuidHandler>()
+                            .ValidateGuidNotDeletedAsync(context);
                         
                         if (!isNotDeleted)
                             context.Fail("請重新登入");

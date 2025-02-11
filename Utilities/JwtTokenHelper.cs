@@ -1,20 +1,17 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using coords_to_taiwanese_city_country.Utilities.Abstracts;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
 namespace coords_to_taiwanese_city_country.Utilities;
 
-/// <summary>
-/// JWT Token 發行相關的工具
-/// </summary>
-public static class JwtTokenHelper
+/// <inheritdoc />
+public class JwtTokenHelper : IJwtTokenHelper
 {
-    /// <summary>
-    /// 發行 JWT
-    /// </summary>
-    public static string GenerateToken(Guid userId, DateTime expiration, string privateKey)
+    /// <inheritdoc />
+    public string GenerateToken(Guid userId, DateTime expiration, string privateKey)
     {
         SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(privateKey));
         

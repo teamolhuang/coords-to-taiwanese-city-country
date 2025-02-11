@@ -4,13 +4,16 @@ using coords_to_taiwanese_city_country.Entities;
 using coords_to_taiwanese_city_country.Models;
 using coords_to_taiwanese_city_country.Services.Abstracts;
 using coords_to_taiwanese_city_country.Utilities;
+using coords_to_taiwanese_city_country.Utilities.Abstracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace coords_to_taiwanese_city_country.Services;
 
 /// <inheritdoc />
 public class AuthService(DatabaseContext databaseContext,
-    IConfiguration configuration) : IAuthService
+    IConfiguration configuration,
+    IJwtTokenHelper jwtTokenHelper,
+    IJwtGuidHandler jwtGuidHandler) : IAuthService
 {
     /// <inheritdoc />
     public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
@@ -63,7 +66,7 @@ public class AuthService(DatabaseContext databaseContext,
         int expireMinutes = configuration.GetSection("Jwt").GetValue<int?>("ExpireMinutes") ?? 60;
         DateTime expiration = DateTime.Now.AddMinutes(expireMinutes);
 
-        string jwtToken = JwtTokenHelper.GenerateToken(data.Id, expiration, privateKey);
+        string jwtToken = jwtTokenHelper.GenerateToken(data.Id, expiration, privateKey);
         
         LoginResponse result = new()
         {
@@ -79,7 +82,7 @@ public class AuthService(DatabaseContext databaseContext,
     {
         // 1. 找出帳號，如果已不存在，當成已刪除成功並回傳
         // 本系統固定會把 GUID 放在 claims 裡面
-        string? userId = JwtGuidHandler.GetGuidFromClaims(claimsPrincipal.Claims);
+        string? userId = jwtGuidHandler.GetGuidFromClaims(claimsPrincipal.Claims);
 
         if (userId is null)
             return;
