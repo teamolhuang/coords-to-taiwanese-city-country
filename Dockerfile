@@ -15,7 +15,7 @@ RUN dotnet build "coords-to-taiwanese-city-country.csproj" -c $BUILD_CONFIGURATI
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "coords-to-taiwanese-city-country.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "coords-to-taiwanese-city-country.csproj" -c $BUILD_CONFIGURATION -o /app/publish /r linux-arm64 /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
