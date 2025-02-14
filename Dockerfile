@@ -11,11 +11,11 @@ COPY ["coords-to-taiwanese-city-country.csproj", "./"]
 RUN dotnet restore "coords-to-taiwanese-city-country.csproj"
 COPY . .
 WORKDIR "/src/"
-RUN dotnet build "coords-to-taiwanese-city-country.csproj" -c $BUILD_CONFIGURATION -o /app/build -r linux-arm64
+RUN dotnet build "coords-to-taiwanese-city-country.csproj" -c $BUILD_CONFIGURATION -o /app/build 
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "coords-to-taiwanese-city-country.csproj" -c $BUILD_CONFIGURATION -o /app/publish -r linux-arm64 /p:UseAppHost=false
+RUN dotnet publish "coords-to-taiwanese-city-country.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
