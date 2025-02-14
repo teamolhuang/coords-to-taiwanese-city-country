@@ -32,7 +32,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag teamolhuang/coords-to-tw-city:$(date +%s)
+      run: docker buildx build --platform linux/amd64,linux/arm64 . --file Dockerfile --tag teamolhuang/coords-to-tw-city:$(date +%s)
 
     - name: Extract metadata (tags, labels) for Docker
       id: meta
