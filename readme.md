@@ -43,7 +43,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./coords-to-tw-city-vol:/app/db
+      - ./coords-to-tw-city-vol/app/db:/app/db
     ports:
       # 在 container 中 (api) 使用預設的 8080
       # 在 host 預設使用 32001 
@@ -57,7 +57,7 @@ services:
       Throttling__MaxExecutionCount: 100
   redis:
     image: redis
-    container_name: redis-container
+    container_name: coords-to-tw-city-redis
     expose:
       - "6379"
     volumes:
