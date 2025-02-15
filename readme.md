@@ -1,9 +1,16 @@
-﻿## Coords To Taiwanese City Country
-* This is a C# ASP.NET Core Web API project, mainly in Traditional Chinese.
-* Its purpose: Convert lat/long coordinates into nearest Taiwanese city and country.
+## 專案架構說明
+
+![image](https://github.com/user-attachments/assets/d1bb2a78-9978-4055-b30b-86b0552fcb2d)
+
+* C#, .NET Core 8
+* ASP.NET Core Web API
+* EF Core
+* SQLite
+* Redis
+* JWT 身分驗證
 
 ## 座標轉台灣本島縣市鄉鎮市區
-* 這是一個 C# ASP.NET Core Web API，主要功能是傳入經緯度，把座標資訊轉換成台灣本島的縣市、鄉鎮市區用。
+* 主要功能是傳入經緯度，把座標資訊轉換成台灣本島的縣市、鄉鎮市區用。
 * 它基於[政府資料開放平臺的 TWD97](https://data.nat.gov.tw/dataset/7441)，不依賴於其他外部 API，可用於內部自行建置服務用等情況。
 
 ## DEMO 網頁
@@ -27,10 +34,6 @@
 #### 3. 使用 `/api/locating/coords-to-taiwanese-city-country` 即可開始轉換經緯度。
 
 ![image](https://github.com/user-attachments/assets/c7856cf4-2b5d-418a-9bec-1e0efc4e5604)
-
-## 專案架構說明
-
-![image](https://github.com/user-attachments/assets/59badf1e-1a9a-42c5-9262-eec67035b0a4)
 
 ## 如何建置
 ### Docker Compose
