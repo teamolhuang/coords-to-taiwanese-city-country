@@ -12,31 +12,24 @@ public class JwtGuidHandler : IJwtGuidHandler
     /// <summary>
     /// 驗證 claim 中的 GUID 尚未在本系統被刪除
     /// </summary>
-    public async Task<bool> ValidateGuidNotDeletedAsync(TokenValidatedContext context)
+    public Task<bool> ValidateGuidNotDeletedAsync(TokenValidatedContext context)
     {
         Claim[]? principalClaims = context.Principal?.Claims.ToArray();
 
         if (principalClaims?.Any() != true)
-            return false;
+            return Task.FromResult(false);
         
         string? nameIdentifier = GetGuidFromClaims(principalClaims);
 
         if (string.IsNullOrWhiteSpace(nameIdentifier))
-            return false;
+            return Task.FromResult(false);
 
-        DatabaseContext dbContext = context.HttpContext.RequestServices.GetRequiredService<DatabaseContext>();
-
-        Guid nameIdentifierGuid = new(nameIdentifier);
+        // 檢查 Redis 刪除帳號用的暫存表中，是否存在這個 GUID。如果存在，就當成驗證不通過。
+        IRedisContext redisContext = context.HttpContext.RequestServices.GetRequiredService<IRedisContext>();
         
-        bool isExist = await dbContext.UserAccounts
-            .Where(ua => ua.Id == nameIdentifierGuid)
-            .Where(ua => ua.BannedUntil == null || ua.BannedUntil < DateTime.Now)
-            .AnyAsync();
-
-        if (!isExist)
-            return false;
-
-        return true;
+        bool isAllowed = !redisContext.Database.SetContains(RedisContextKeys.DeletedAccount, nameIdentifier);  
+        
+        return Task.FromResult(isAllowed);
     }
 
     /// <inheritdoc />

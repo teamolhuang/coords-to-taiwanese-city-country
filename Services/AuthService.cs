@@ -6,6 +6,7 @@ using coords_to_taiwanese_city_country.Services.Abstracts;
 using coords_to_taiwanese_city_country.Utilities;
 using coords_to_taiwanese_city_country.Utilities.Abstracts;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace coords_to_taiwanese_city_country.Services;
 
@@ -13,7 +14,8 @@ namespace coords_to_taiwanese_city_country.Services;
 public class AuthService(DatabaseContext databaseContext,
     IConfiguration configuration,
     IJwtTokenHelper jwtTokenHelper,
-    IJwtGuidHandler jwtGuidHandler) : IAuthService
+    IJwtGuidHandler jwtGuidHandler,
+    IRedisContext redisContext) : IAuthService
 {
     /// <inheritdoc />
     public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
@@ -63,20 +65,16 @@ public class AuthService(DatabaseContext databaseContext,
         
         // 3. 發行 JWT 並回傳
         string privateKey = configuration.GetSection("Jwt").GetValue<string>("SigningKey") ?? throw new NullReferenceException("SingingKey missed!");
-        int expireMinutes = configuration.GetSection("Jwt").GetValue<int?>("ExpireMinutes") ?? 60;
-        DateTime expiration = DateTime.Now.AddMinutes(expireMinutes);
-
-        string jwtToken = jwtTokenHelper.GenerateToken(data.Id, expiration, privateKey);
         
         LoginResponse result = new()
         {
-            AccessToken = jwtToken,
-            ExpiresAt = expiration
+            AccessToken = jwtTokenHelper.GenerateToken(data.Id, privateKey),
+            ExpiresAt = DateTime.Now.Add(jwtTokenHelper.GetExpirationSpan())
         };
 
         return result;
     }
-
+    
     /// <inheritdoc />
     public async Task DeleteAsync(ClaimsPrincipal claimsPrincipal)
     {
@@ -94,9 +92,14 @@ public class AuthService(DatabaseContext databaseContext,
         if (data is null)
             return;
 
-        // 2. 執行刪除並回傳
+        // 2. 執行刪除
         databaseContext.Remove(data);
         await databaseContext.SaveChangesAsync();
+        
+        // 3. 把刪除的 GUID 存進 Redis，並更新過期時間為本系統的 JWT 有效時間
+        IDatabase database = redisContext.Database;
+        await database.SetAddAsync(RedisContextKeys.DeletedAccount, userId);
+        await database.KeyExpireAsync(RedisContextKeys.DeletedAccount, jwtTokenHelper.GetExpirationSpan());
     }
 
     private async Task<UserAccount?> FindUserAccountByIdAsync(Guid id)

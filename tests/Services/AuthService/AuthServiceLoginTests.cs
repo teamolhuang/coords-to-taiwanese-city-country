@@ -56,7 +56,7 @@ public class AuthServiceLoginTests
 
         Mock<IJwtTokenHelper> mockJwtTokenHelper = autoMocker.GetMock<IJwtTokenHelper>();
         mockJwtTokenHelper
-            .Setup(jwt => jwt.GenerateToken(mockData.Id, It.IsAny<DateTime>(), mockSigningKey))
+            .Setup(jwt => jwt.GenerateToken(mockData.Id, mockSigningKey))
             .Returns(mockToken)
             .Verifiable(Times.Once);
         

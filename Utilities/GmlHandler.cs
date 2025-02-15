@@ -27,7 +27,7 @@ public class GmlHandler(IRedisContext redisContext) : IGmlHandler
     {
         await EnsureRedisGeoSetInitializedAsync();
 
-        RedisValue[] values = await redisContext.Database.SetMembersAsync(RedisGeoNamesKey);
+        RedisValue[] values = await redisContext.Database.SetMembersAsync(RedisContextKeys.CoordinateNames);
 
         return values.Select(v => v.ToString());
     }
@@ -38,22 +38,12 @@ public class GmlHandler(IRedisContext redisContext) : IGmlHandler
     private const string GmlCoordinatesNode = "gml:coordinates";
     
     /// <summary>
-    /// 所有包含在 GML 中的縣市與鄉鎮市區的經緯度座標
-    /// </summary>
-    private const string RedisGeoKey = "coords";
-    
-    /// <summary>
-    /// 所有包含在 GML 中的縣市與鄉鎮市區的名稱
-    /// </summary>
-    private const string RedisGeoNamesKey = "coords-names";
-
-    /// <summary>
     /// 初始化
     /// </summary>
     private async Task EnsureRedisGeoSetInitializedAsync()
     {
         // 如果已經建立過的
-        if (redisContext.Database.KeyExists(RedisGeoKey))
+        if (redisContext.Database.KeyExists(RedisContextKeys.Coordinates))
             return;
         
         // GML 格式基於 XML，而政府開放資料平台提供的資料是一個包含許多 GML 元素的 XML
@@ -80,7 +70,7 @@ public class GmlHandler(IRedisContext redisContext) : IGmlHandler
             if (xmlReader.Name.Equals(NameNode))
             {
                 nowName = await xmlReader.ReadElementContentAsStringAsync();
-                await redisContext.Database.SetAddAsync(RedisGeoNamesKey, nowName);
+                await redisContext.Database.SetAddAsync(RedisContextKeys.CoordinateNames, nowName);
             } 
             
             if (xmlReader.Name.Equals(GmlCoordinatesNode))
@@ -101,7 +91,7 @@ public class GmlHandler(IRedisContext redisContext) : IGmlHandler
                     return new GeoEntry(coords.First(), coords.Last(), name);
                 });
 
-                await redisContext.Database.GeoAddAsync(RedisGeoKey, entries.ToArray());
+                await redisContext.Database.GeoAddAsync(RedisContextKeys.Coordinates, entries.ToArray());
             }
         }
     }
@@ -114,7 +104,7 @@ public class GmlHandler(IRedisContext redisContext) : IGmlHandler
     {
         // 參照維基百科，台灣最大面積的行政區是 1641.85 平方公里
         // 我們半徑查 1642 / 2 = 821
-        GeoRadiusResult[] closest = await redisContext.Database.GeoSearchAsync(RedisGeoKey,
+        GeoRadiusResult[] closest = await redisContext.Database.GeoSearchAsync(RedisContextKeys.Coordinates,
             (double)longitude,
             (double)latitude,
             new GeoSearchCircle(821, GeoUnit.Kilometers),

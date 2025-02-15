@@ -8,5 +8,10 @@ public interface IJwtTokenHelper
     /// <summary>
     /// 發行 JWT
     /// </summary>
-    string GenerateToken(Guid userId, DateTime expiration, string privateKey);
+    string GenerateToken(Guid userId, string privateKey);
+
+    /// <summary>
+    /// 取得本系統的 JWT 有效時間長度
+    /// </summary>
+    TimeSpan GetExpirationSpan();
 }

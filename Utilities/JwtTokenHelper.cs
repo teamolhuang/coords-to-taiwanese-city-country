@@ -10,10 +10,24 @@ namespace coords_to_taiwanese_city_country.Utilities;
 /// <inheritdoc />
 public class JwtTokenHelper : IJwtTokenHelper
 {
+    /// <summary>
+    /// JWT 有效分鐘數
+    /// </summary>
+    private int ExpireMinutes { get; init; }
+    
+    /// <summary>
+    /// 取得實例。
+    /// </summary>
+    public JwtTokenHelper(IConfiguration configuration)
+    {
+        ExpireMinutes = configuration.GetSection("Jwt").GetValue<int?>("ExpireMinutes") ?? 60;
+    }
+    
     /// <inheritdoc />
-    public string GenerateToken(Guid userId, DateTime expiration, string privateKey)
+    public string GenerateToken(Guid userId, string privateKey)
     {
         SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(privateKey));
+        DateTime expiration = DateTime.UtcNow.AddMinutes(ExpireMinutes);
         
         JsonWebTokenHandler handler = new();
 
@@ -28,5 +42,11 @@ public class JwtTokenHelper : IJwtTokenHelper
         });
         
         return token ?? throw new NullReferenceException("CreateToken failed");
+    }
+
+    /// <inheritdoc />
+    public TimeSpan GetExpirationSpan()
+    {
+        return TimeSpan.FromMinutes(ExpireMinutes);
     }
 }

@@ -4,6 +4,7 @@ using coords_to_taiwanese_city_country.Utilities.Abstracts;
 using Moq;
 using Moq.AutoMock;
 using Moq.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace tests.Services.AuthService;
 
@@ -12,8 +13,8 @@ namespace tests.Services.AuthService;
 public class AuthServiceDeleteTests
 {
     [Test]
-    [Description("驗證 DeleteAsync 應從 claims 中取得 GUID，藉此查詢帳號後將帳號從 DB 刪除")]
-    public async Task DeleteAsync_ShouldFindAccountByGuidExtractedFromClaims_AndDeleteFromDatabase()
+    [Description("驗證 DeleteAsync 應從 claims 中取得 GUID，藉此查詢帳號後將帳號從 DB 刪除，並將 GUID 寫入 Redis 記憶")]
+    public async Task DeleteAsync_ShouldFindAccountByGuidExtractedFromClaims_AndDeleteFromDatabaseThenRecordInRedis()
     {
         // Arrange
         AutoMocker autoMocker = new();
@@ -47,6 +48,21 @@ public class AuthServiceDeleteTests
             .Verifiable(Times.Once);
 
         autoMocker.Use(mockContext);
+
+        string expectedRedisKey = "DeletedAccount";
+        
+        Mock<IDatabase> mockRedisDatabase = new();
+        mockRedisDatabase
+            .Setup(d => d.SetAddAsync(expectedRedisKey, mockData.Id.ToString(), default))
+            .Verifiable(Times.Once);
+        mockRedisDatabase
+            .Setup(d => d.KeyExpireAsync(expectedRedisKey, It.IsAny<TimeSpan>(), default, default))
+            .Verifiable(Times.Once);
+        
+        Mock<IRedisContext> mockRedis = autoMocker.GetMock<IRedisContext>();
+        mockRedis.SetupGet(r => r.Database)
+            .Returns(mockRedisDatabase.Object)
+            .Verifiable(Times.Once);
         
         coords_to_taiwanese_city_country.Services.AuthService authService =
             autoMocker.Get<coords_to_taiwanese_city_country.Services.AuthService>();
