@@ -55,6 +55,14 @@ services:
       Throttling__WindowDurationSeconds: 1
       # 在寬容期間最多可以執行幾次。預設 100 代表 100 次
       Throttling__MaxExecutionCount: 100
+  redis:
+    image: redis
+    container_name: redis-container
+    expose:
+      - "6379"
+    volumes:
+      - ./coords-to-tw-city-vol/redis/data:/data
+    command: redis-server --appendonly yes
 ```
 
 ```
