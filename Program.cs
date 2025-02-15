@@ -62,6 +62,9 @@ public class Program
             options.UseSqlite($"Data Source=./db/database.db");
         });
         
+        // Redis
+        builder.Services.AddSingleton<IRedisContext, RedisContext>();
+        
         // 我們允許透過 docker-compose 的系統參數變動 appSettings
         builder.Configuration
             .AddEnvironmentVariables();

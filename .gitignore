@@ -6,3 +6,5 @@ riderModule.iml
 .idea/
 Properties/
 database.db
+/coords-to-tw-city-vol/
+/db/
