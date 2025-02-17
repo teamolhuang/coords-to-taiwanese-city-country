@@ -95,6 +95,8 @@ public class GmlHandler(IRedisContext redisContext) : IGmlHandler
             }
         }
     }
+
+    private static readonly double SearchRadius = Math.Sqrt(1642 / double.Pi);
     
     /// <summary>
     /// 輸入經緯度，基於 TWD97 查詢縣市、行政區。
@@ -103,11 +105,12 @@ public class GmlHandler(IRedisContext redisContext) : IGmlHandler
     private async Task<string> QueryForNearestCityCountry(decimal longitude, decimal latitude)
     {
         // 參照維基百科，台灣最大面積的行政區是 1641.85 平方公里
-        // 我們半徑查 1642 / 2 = 821
+        // 我們半徑查 1642 / pi 的根號
+        
         GeoRadiusResult[] closest = await redisContext.Database.GeoSearchAsync(RedisContextKeys.Coordinates,
             (double)longitude,
             (double)latitude,
-            new GeoSearchCircle(821, GeoUnit.Kilometers),
+            new GeoSearchCircle(SearchRadius, GeoUnit.Kilometers),
             1);
 
         return closest.FirstOrDefault()
