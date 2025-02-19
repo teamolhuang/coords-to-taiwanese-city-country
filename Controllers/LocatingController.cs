@@ -24,7 +24,7 @@ public class LocatingController(
     /// <summary>
     /// 傳入經緯度，轉換成台灣本島與該座標最鄰近的縣市、鄉鎮市區。
     /// </summary>
-    [HttpGet("coords-conversion")]
+    [HttpGet]
     [ProducesResponseType<BaseResponse<GetLocationResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetTaiwanCityCountry([FromQuery] GetLocationRequest request)
     {
