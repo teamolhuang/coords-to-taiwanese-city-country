@@ -26,7 +26,7 @@ public class LocatingController(
     /// </summary>
     [HttpGet]
     [ProducesResponseType<BaseResponse<GetLocationResponse>>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetTaiwanCityCountry([FromQuery] GetLocationRequest request)
+    public async Task<IActionResult> GetTaiwanCityCountryAsync([FromQuery] GetLocationRequest request)
     {
         Func<Task<GetLocationResponse>> execution = async () =>
         {
@@ -58,7 +58,7 @@ public class LocatingController(
     /// </summary>
     [HttpGet("list")]
     [ProducesResponseType<CityCountryListResponse>(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCityCountryList()
+    public async Task<IActionResult> GetCityCountryListAsync()
     {
         BaseResponse<CityCountryListResponse> result = await locatingService.GetListAsync()
             .ToBaseResponse();
