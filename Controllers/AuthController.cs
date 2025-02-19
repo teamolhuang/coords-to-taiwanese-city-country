@@ -19,7 +19,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     /// <summary>
     /// 註冊
     /// </summary>
-    [HttpPost("register")]
+    [HttpPost("account")]
     [AllowAnonymous]
     [ProducesResponseType<BaseResponse<RegisterResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest request)
@@ -33,7 +33,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     /// <summary>
     /// 登入
     /// </summary>
-    [HttpPost("login")]
+    [HttpPost("authentication")]
     [AllowAnonymous]
     [ProducesResponseType<BaseResponse<LoginResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request)
@@ -48,7 +48,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     /// <summary>
     /// 刪除帳號
     /// </summary>
-    [HttpDelete("delete-account")]
+    [HttpDelete("account")]
     [Authorize]
     [ProducesResponseType<BaseResponse>(StatusCodes.Status200OK)]
     public async Task<IActionResult> DeleteAccountAsync()

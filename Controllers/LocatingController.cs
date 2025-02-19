@@ -24,7 +24,7 @@ public class LocatingController(
     /// <summary>
     /// 傳入經緯度，轉換成台灣本島與該座標最鄰近的縣市、鄉鎮市區。
     /// </summary>
-    [HttpGet("coords-to-taiwanese-city-country")]
+    [HttpGet("coords-conversion")]
     [ProducesResponseType<BaseResponse<GetLocationResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetTaiwanCityCountry([FromQuery] GetLocationRequest request)
     {
@@ -56,7 +56,7 @@ public class LocatingController(
     /// <summary>
     /// 查詢目前本系統中的所有縣市與鄉鎮市區。
     /// </summary>
-    [HttpGet("city-country-list")]
+    [HttpGet("list")]
     [ProducesResponseType<CityCountryListResponse>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCityCountryList()
     {
